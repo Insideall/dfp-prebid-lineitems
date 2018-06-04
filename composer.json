@@ -1,0 +1,5 @@
+{
+    "require": {
+        "googleads/googleads-php-lib": "^34.0"
+    }
+}
