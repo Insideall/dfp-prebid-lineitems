@@ -1,2 +1,2 @@
 # dfp-prebid-lineitems
-Automatically setup and update your Line Items on your DFP setup 
+Automatically setup and update your Prebid Line Items in DFP 
