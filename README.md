@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DFP Prebid LineItems Setup Tool
 Automatically setup and update your Line Items on DFP for [Prebid.js](http://prebid.org/)
 
@@ -35,14 +36,14 @@ _You will need credentials to access your DFP account programmatically. This sum
 2. Include the library via Composer:
 $ composer require googleads/googleads-php-lib
 3. Rename key
-   * Rename the Google credentials key you previously downloaded (`[something].json`) to `googleServiceAccount.json` and move it to the config folder
-4. Make a copy of [adsapi_php.ini](https://github.com/googleads/googleads-php-lib/blob/master/examples/Dfp/adsapi_php.ini) and save it into the root folder.
+   * Rename the Google credentials key you previously downloaded (`[something].json`) to `googleServiceAccount.json` and move it to the project root folder
+4. Make a copy of [adsapi_php.ini](https://github.com/googleads/googleads-php-lib/blob/master/examples/Dfp/adsapi_php.ini) and save it into the project root folder.
 5. In `adsapi_php.ini`, set the required fields:
    * `application_name` is the name of the application you used to get your Google developer credentials
    * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
    * `jsonKeyFilePath`is the path to your JSON key file
    * `scopes` is "https://www.googleapis.com/auth/dfp"
-   * `impersonatedEmail` is the email account of the user you want to impersonate as, if any (something like user$app.iam.gserviceaccount.com)
+   * `impersonatedEmail` is the email account of the user you want to impersonate as, if any (something like user@app.iam.gserviceaccount.com)
 
 ### Verifying Setup
 Let's try it out! From the top level directory, run
@@ -66,12 +67,9 @@ Then, from the root of the repository, run:
 
 You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
 
-*Note : an exception can appears during the line items creation process - Restart HeaderBiddingCreation.php with the same setup
+*Note:  an exception can appears during the line items creation process - Restart HeaderBiddingCreation.php with the same setup*
 *Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
 
-## Additional Settings
-
-* The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing. For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
-* This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it.
-
-Please consider [contributing](CONTRIBUTING.md) to make the tool more flexible.
+##Limitations
+* This tool does not support additional line item targeting beyond placement, hb_bidder, and hb_pb values. Placement targeting is currently required, and targeting by ad unit isn't supported
+* This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it. However, once orders are created, you can easily update them (change Price Granularity, change Available Sizes)
