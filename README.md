@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # DFP Prebid LineItems Setup Tool
 Automatically setup and update your Line Items on DFP for [Prebid.js](http://prebid.org/)
 
@@ -68,8 +67,9 @@ Then, from the root of the repository, run:
 You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
 
 *Note:  an exception can appears during the line items creation process - Restart HeaderBiddingCreation.php with the same setup*
+
 *Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
 
-##Limitations
+## Limitations
 * This tool does not support additional line item targeting beyond placement, hb_bidder, and hb_pb values. Placement targeting is currently required, and targeting by ad unit isn't supported
 * This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it. However, once orders are created, you can easily update them (change Price Granularity, change Available Sizes)
