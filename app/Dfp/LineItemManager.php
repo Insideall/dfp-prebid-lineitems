@@ -2,7 +2,7 @@
 
 namespace App\Dfp;
 
-require("../../vendor/autoload.php");
+require(__DIR__."/../../vendor/autoload.php");
 
 use DateTime;
 use DateTimeZone;

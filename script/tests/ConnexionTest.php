@@ -1,7 +1,14 @@
 <?php
 
-require ("../scriptLoader.php");
+require (__DIR__."/../scriptLoader.php");
 
 $traffickerId  = (new \App\Dfp\UserManager)->getUserId();
 
-echo $traffickerId;
+if(is_numeric($traffickerId))
+{
+	echo "\n====Connexion OK====\n\n";
+}
+else 
+{
+	echo "\n===Connexion KO====\n\n";
+}
