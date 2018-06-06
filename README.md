@@ -14,7 +14,7 @@ While this tool covers typical use cases, it might not fit your needs. Check out
 ## Getting Started
 
 ### Creating Google Credentials
-_You will need credentials to access your DFP account programmatically. This summarizes steps from [DFP docs](https://developers.google.com/doubleclick-publishers/docs/authentication) and the DFP PHP library [auth guide](https://github.com/googleads/googleads-php-lib).
+You will need credentials to access your DFP account programmatically. This summarizes steps from [DFP docs](https://developers.google.com/doubleclick-publishers/docs/authentication) and the DFP PHP library [auth guide](https://github.com/googleads/googleads-php-lib).
 1. If you haven't yet, sign up for a [DFP account](https://www.doubleclickbygoogle.com/solutions/revenue-management/dfp/).
 2. Create Google developer credentials
    * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
@@ -33,7 +33,7 @@ _You will need credentials to access your DFP account programmatically. This sum
 ### Setting Up
 1. Clone this repository.
 2. Include the library via Composer:
-$ composer require googleads/googleads-php-lib
+`$ composer require googleads/googleads-php-lib
 3. Rename key
    * Rename the Google credentials key you previously downloaded (`[something].json`) to `googleServiceAccount.json` and move it to the project root folder
 4. Make a copy of [adsapi_php.ini](https://github.com/googleads/googleads-php-lib/blob/master/examples/Dfp/adsapi_php.ini) and save it into the project root folder.
@@ -53,10 +53,11 @@ and you should whether the connexion is OK or not
 
 ## Creating Line Items
 
-Modify the settings in `/script/hb/HeaderBiddingCreation.php`
-* SSP should be an array of ssp you want to create - please enter here the bidder code defined in prebid documentation
-* Price Granularity are standard defined in [Prebid](http://prebid.org/prebid-mobile/adops-price-granularity.html).
-* Currency is our AdServer Currency
+Modify the settings in 
+`/script/hb/HeaderBiddingCreation.php`
+* SSP must be an array of ssp you want to create - please enter here the bidder code defined in prebid documentation
+* Price Granularity are standards, defined on [prebid.org](http://prebid.org/prebid-mobile/adops-price-granularity.html).
+* Currency is the AdServer Currency (USD, EUR...)
 * Sizes: please enter all sizes allowed on your inventory 
 
 
