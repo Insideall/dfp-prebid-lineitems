@@ -96,7 +96,13 @@ class SSPScript extends \App\Dfp\DfpManager
 				->setSizeOverride($this->sizes)
 				->setUpLica();
 			$i ++;
-			echo "\n\nLine Item ".ucfirst($this->ssp)."_Prebid_".$dfpValue['valueName']." created/updated.\n";
+			if(empty($this->ssp))
+			{
+				echo "\n\nLine Item Prebid_".$dfpValue['valueName']." created/updated.\n";
+			} else {
+				echo "\n\nLine Item ".ucfirst($this->ssp)."_Prebid_".$dfpValue['valueName']." created/updated.\n";
+			}
+			
 			echo round(($i/count($this->valuesList))*100, 1)."% done\n\n";
 		}
 

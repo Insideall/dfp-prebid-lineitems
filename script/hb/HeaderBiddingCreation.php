@@ -6,7 +6,7 @@ use App\Scripts\HeaderBiddingScript;
 
 $entry = array(
 	"ssp" => ['rubicon'], // Needs to be bidder code defined in prebid documentation, ie appnexus, rubicon, improvedigital, smartadserver
-	"priceGranularity" => "dense", // can be 'low', 'med', 'high', 'auto','dense', 'test'
+	"priceGranularity" => "test", // can be 'low', 'med', 'high', 'auto','dense', 'test'
 	"currency"=>"EUR",
 	"sizes" => [[300, 250], [728, 90], [976, 91], [468, 60]]
 );

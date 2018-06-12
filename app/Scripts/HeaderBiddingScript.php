@@ -30,4 +30,23 @@ class HeaderBiddingScript
 			$script->createAdUnits();
 		}
 	}
+
+	static function createGlobalAdunits($params)
+	{
+		$params = array(
+			"orderName" => "Insideall - Prebid",
+			"advertiserName" => "Insideall - Prebid",
+			"priceGranularity" => $params["priceGranularity"],
+			"sizes" =>$params["sizes"],
+			"priceKeyName"=>substr("hb_pb",0,20),
+			"adidKeyName"=>substr("hb_adid",0,20),
+			"sizeKeyName"=>substr("hb_size",0,20),
+			"currency"=>$params['currency'],
+			"ssp"=>""
+		);
+		$script = new SSPScript($params);
+
+		$script->createAdUnits();
+
+	}
 }

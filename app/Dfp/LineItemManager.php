@@ -96,7 +96,11 @@ class LineItemManager extends DfpManager
 
     public function setLineItemName()
     {
-        $this->lineItemName = ucfirst($this->ssp)."_Prebid_".$this->bucket;
+        if (empty($this->ssp)){
+            $this->lineItemName = "Prebid_".$this->bucket;
+        } else {
+            $this->lineItemName = ucfirst($this->ssp)."_Prebid_".$this->bucket;
+        }
         return $this;
     }
 
@@ -194,7 +198,7 @@ class LineItemManager extends DfpManager
 	{
 
 		$lineItem = new LineItem();
-        $lineItem->setName(ucfirst($this->ssp)."_Prebid_".$this->bucket);
+        $lineItem->setName($this->lineItemName);
         $lineItem->setOrderId($this->orderId);
 
         $targeting = new Targeting();

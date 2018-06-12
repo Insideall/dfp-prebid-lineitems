@@ -38,7 +38,12 @@ class CreativeManager extends DfpManager
 		//Create a creativeName List
 		$creativeNameList = [];
 		for ($i=1;$i <= 10; $i++) { 
-			array_push($creativeNameList, ucfirst($this->ssp)."_Prebid_Creative_$i");
+			if(empty($this->ssp)){
+				array_push($creativeNameList, "Prebid_Creative_$i");
+			} else {
+				array_push($creativeNameList, ucfirst($this->ssp)."_Prebid_Creative_$i");
+			}
+			
 		}
 		
 		foreach($creativeNameList as $creativeName)
@@ -138,7 +143,11 @@ class CreativeManager extends DfpManager
 
 	private function createSnippet()
 	{
-		$key =substr("hb_adid_".$this->ssp,0,20);
+		if(empty($this->ssp)){
+			$key =substr("hb_adid",0,20);
+		} else {
+			$key =substr("hb_adid_".$this->ssp,0,20);
+		}
 		$snippet = "<script>\n";
 		$snippet .= "var w = window;\n";
 		$snippet .= "for (i = 0; i < 10; i++) {\n";
