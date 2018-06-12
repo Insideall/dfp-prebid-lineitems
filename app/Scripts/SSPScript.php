@@ -103,7 +103,7 @@ class SSPScript extends \App\Dfp\DfpManager
 				echo "\n\nLine Item ".ucfirst($this->ssp)."_Prebid_".$dfpValue['valueName']." created/updated.\n";
 			}
 			
-			echo round(($i/count($this->valuesList))*100, 1)."% done\n\n";
+			echo round(($i/count($this->dfpValuesList))*100, 1)."% done\n\n";
 		}
 
 		(new \App\Dfp\OrderManager)->approveOrder($this->orderId);
