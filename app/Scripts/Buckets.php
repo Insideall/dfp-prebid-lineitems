@@ -6,104 +6,65 @@ class Buckets
 {
 	public static function createBuckets($value)
 	{
-		if(in_array($value, ['low', 'med', 'high', 'auto','dense', 'test']))
+		$predefinedGranularityBuckets = [
+			'low' => [
+				[0, 5, 0.5]
+			],
+			'med' => [
+				[0, 20, 0.1]
+			],
+			'high' => [
+				[0, 20, 0.01]
+			],
+			'auto' => [
+				[0, 5, 0.05],
+				[5, 10, 0.1],
+				[10, 20, 0.5],
+			],
+			'dense' => [
+				[0, 3, 0.01],
+				[3, 8, 0.05],
+				[8, 20, 0.5],
+			],
+			'test' => [
+				[0, 20, 2.5]
+			]
+		];
+		
+		if (is_string($value))
 		{
-			$function = "create".ucfirst($value)."Buckets";
-			return self::$function();
+			if (isset($predefinedGranularityBuckets[$value])) 
+			{
+				$value = $predefinedGranularityBuckets[$value];
+			}
+			else
+			{
+				echo "Error: You need to choose an value in 'low', 'med', 'high', 'auto','dense'!!!\n";
+				exit;
+			}
 		}
-		else
-		{
-			echo "Error: You need to choose an value in 'low', 'med', 'high', 'auto','dense'!!!\n";
-			exit;
-		}
-		/*
-		switch ($values) {
-			case "dense":
-				return self::createDenseBuckets();
-			case "low":
-				return self::createLowBuckets();	
-			case "test":
-				return self::createTestBuckets();
-			default:
-				return [];
-		}
-		*/
+		
+		return self::create($value);
 	}
-
-	private function createDenseBuckets()
+	
+	private static function create($priceGranularity)
 	{
 		$buckets = [];
-		for($i = 0;$i <= 3; $i = $i + 0.01)
+		$lastValue = 0;
+		foreach ($priceGranularity as $value)
 		{
-			array_push($buckets, sprintf('%0.2f', $i));
+			// Floating point comparison is not reliable
+			// https://stackoverflow.com/questions/3148937/compare-floats-in-php
+			for($i = $value[0]; bccomp($i, $value[1], 2) <= 0; $i += $value[2])
+			{
+				if ($i > 0 && bccomp($i, $lastValue, 2) !== 0)
+				{
+					array_push($buckets, sprintf('%0.2f', $i));
+				}
+				$lastValue = $i;
+			}
 		}
-		for($i = 3.05;$i <= 8; $i = $i + 0.05)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		for($i = 8.5;$i <= 20; $i = $i + 0.5)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
+		
 		return $buckets;
 	}
-
-	private function createAutoBuckets()
-	{
-		$buckets = [];
-		for($i = 0;$i <= 5; $i = $i + 0.05)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		for($i = 5.1 ;$i <= 10; $i = $i + 0.1)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		for($i = 10.5;$i <= 20; $i = $i + 0.5)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		return $buckets;
-	}
-
-	private function createLowBuckets()
-	{
-		$buckets = [];
-		for($i = 0;$i <= 5; $i = $i + 0.5)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		return $buckets;
-	}
-
-	private function createMedBuckets()
-	{
-		$buckets = [];
-		for($i = 0;$i <= 20; $i = $i + 0.1)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		return $buckets;
-	}
-
-	private function createHighBuckets()
-	{
-		$buckets = [];
-		for($i = 0;$i <= 20; $i = $i + 0.01)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		return $buckets;
-	}
-
-	private function createTestBuckets()
-	{
-		$buckets = [];
-		for($i = 0;$i <= 20; $i = $i + 2.5)
-		{
-			array_push($buckets, sprintf('%0.2f', $i));
-		}
-		return $buckets;
-	}
-
 }
