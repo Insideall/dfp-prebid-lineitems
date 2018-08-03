@@ -121,6 +121,7 @@ class ValueManager extends DfpManager
 			$data = $customTargetingService->getCustomTargetingValuesByStatement($statementBuilder->toStatement());
 			if ($data->getResults() !== null)
 			{
+				$totalResultSetSize = $data->getTotalResultSetSize();
 				foreach ($data->getResults() as $value) {
 				    $foo = array(
 				  		"valueId" => $value->getId(),
@@ -128,8 +129,8 @@ class ValueManager extends DfpManager
 				        "valueDisplayName" => $value->getDisplayName()
 				    );
 				    array_push($output, $foo);
-				    $statementBuilder->increaseOffsetBy($pageSize);
 				}
+			    $statementBuilder->increaseOffsetBy($pageSize);
 			}
 		} while ($statementBuilder->getOffset() < $totalResultSetSize);
 		return $output;
