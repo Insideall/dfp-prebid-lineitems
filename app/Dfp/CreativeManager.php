@@ -74,8 +74,6 @@ class CreativeManager extends DfpManager
 				return $output;
 			}
 			foreach ($data->getResults() as $creative) {
-			    var_dump($creative);
-			    exit;
 			    $foo = array(
 			  		"creativeId" => $creative->getId(),
 			        "creativeName" => $creative->getName(),
@@ -95,8 +93,9 @@ class CreativeManager extends DfpManager
 		$creativeService = $this->dfpServices->get($this->session, CreativeService::class);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
-			->where('name = :name')
-			->WithBindVariableValue('name', $creativeName);
+			->where('name = :name AND advertiserId = :advertiserId')
+			->WithBindVariableValue('name', $creativeName)
+			->WithBindVariableValue('advertiserId', $this->advertiserId);
 		$data = $creativeService->getCreativesByStatement($statementBuilder->toStatement());
 		if ($data->getResults() !== null)
 		{

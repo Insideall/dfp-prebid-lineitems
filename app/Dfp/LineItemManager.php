@@ -140,8 +140,9 @@ class LineItemManager extends DfpManager
         $lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
         $statementBuilder = (new StatementBuilder())
             ->orderBy('id ASC')
-            ->where('name = :name')
-            ->WithBindVariableValue('name', $this->lineItemName);
+            ->where('name = :name AND orderId = :orderId')
+            ->WithBindVariableValue('name', $this->lineItemName)
+            ->WithBindVariableValue('orderId', $this->orderId);
         $data = $lineItemService->getLineItemsByStatement($statementBuilder->toStatement());
         if ($data->getResults() !== null)
         {
