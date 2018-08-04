@@ -44,6 +44,11 @@ class Buckets
 			}
 		}
 		
+		if (!is_array($value[0])) {
+			echo "Error: custom granularity should specify an array of buckets\n";
+			exit;
+		}
+		
 		return self::create($value);
 	}
 	
