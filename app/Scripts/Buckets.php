@@ -8,26 +8,26 @@ class Buckets
 	{
 		$predefinedGranularityBuckets = [
 			'low' => [
-				[0, 5, 0.5]
+				['precision' => 2, 'min' => 0, 'max' => 5, 'increment' => 0.5]
 			],
 			'med' => [
-				[0, 20, 0.1]
+				['precision' => 2, 'min' => 0, 'max' => 20, 'increment' => 0.1]
 			],
 			'high' => [
-				[0, 20, 0.01]
+				['precision' => 2, 'min' => 0, 'max' => 20, 'increment' => 0.01]
 			],
 			'auto' => [
-				[0, 5, 0.05],
-				[5, 10, 0.1],
-				[10, 20, 0.5],
+				['precision' => 2, 'min' => 0, 'max' => 5, 'increment' => 0.05],
+				['precision' => 2, 'min' => 5, 'max' => 10, 'increment' => 0.1],
+				['precision' => 2, 'min' => 10, 'max' => 20, 'increment' => 0.5],
 			],
 			'dense' => [
-				[0, 3, 0.01],
-				[3, 8, 0.05],
-				[8, 20, 0.5],
+				['precision' => 2, 'min' => 0, 'max' => 3, 'increment' => 0.01],
+				['precision' => 2, 'min' => 3, 'max' => 8, 'increment' => 0.05],
+				['precision' => 2, 'min' => 8, 'max' => 20, 'increment' => 0.5],
 			],
 			'test' => [
-				[0, 20, 2.5]
+				['precision' => 2, 'min' => 0, 'max' => 20, 'increment' => 2.5]
 			]
 		];
 		
@@ -42,9 +42,11 @@ class Buckets
 				echo "Error: You need to choose an value in 'low', 'med', 'high', 'auto','dense'!!!\n";
 				exit;
 			}
+		} else {
+			$value = $value["buckets"];
 		}
 		
-		if (!is_array($value[0])) {
+		if (!isset($value[0]['increment'])) {
 			echo "Error: custom granularity should specify an array of buckets\n";
 			exit;
 		}
@@ -60,11 +62,11 @@ class Buckets
 		{
 			// Floating point comparison is not reliable
 			// https://stackoverflow.com/questions/3148937/compare-floats-in-php
-			for($i = $value[0]; bccomp($i, $value[1], 2) <= 0; $i += $value[2])
+			for($i = $value['min']; bccomp($i, $value['max'], 2) <= 0; $i += $value['increment'])
 			{
 				if ($i > 0 && bccomp($i, $lastValue, 2) !== 0)
 				{
-					array_push($buckets, sprintf('%0.2f', $i));
+					array_push($buckets, sprintf("%0.{$value['precision']}f", $i));
 				}
 				$lastValue = $i;
 			}
