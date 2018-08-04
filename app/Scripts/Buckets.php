@@ -60,13 +60,14 @@ class Buckets
 		$lastValue = 0;
 		foreach ($priceGranularity as $value)
 		{
+			$precision = isset($value['precision']) ? $value['precision'] : 2;
 			// Floating point comparison is not reliable
 			// https://stackoverflow.com/questions/3148937/compare-floats-in-php
-			for($i = $value['min']; bccomp($i, $value['max'], 2) <= 0; $i += $value['increment'])
+			for($i = $value['min']; bccomp($i, $value['max'], $precision) <= 0; $i += $value['increment'])
 			{
 				if ($i > 0 && bccomp($i, $lastValue, 2) !== 0)
 				{
-					array_push($buckets, sprintf("%0.{$value['precision']}f", $i));
+					array_push($buckets, sprintf("%0.{$precision}f", $i));
 				}
 				$lastValue = $i;
 			}
