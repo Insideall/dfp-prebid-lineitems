@@ -1,4 +1,4 @@
-<?php
+te<?php
 
 require (__DIR__."/../scriptLoader.php");
 

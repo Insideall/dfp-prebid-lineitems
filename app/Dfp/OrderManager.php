@@ -12,6 +12,7 @@ use Google\AdsApi\Dfp\v201802\Order;
 use Google\AdsApi\Dfp\v201802\OrderService;
 use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
 use Google\AdsApi\Dfp\v201802\ApproveOrders as ApproveOrdersAction;
+use Google\AdsApi\Dfp\v201802\ApiException;
 
 class OrderManager extends DfpManager
 {
@@ -60,10 +61,29 @@ class OrderManager extends DfpManager
 		
         // Create and perform action.
         $action = new ApproveOrdersAction();
-        $result = $orderService->performOrderAction(
-            $action,
-            $statementBuilder->toStatement()
-        );
+        $attempts =0;
+        do {
+            try
+            {
+		        $result = $orderService->performOrderAction(
+		            $action,
+		            $statementBuilder->toStatement()
+		        );
+		   	} catch (ApiException $Exception) {
+                echo "\n\n======EXCEPTION======\n\n";
+                $ApiErrors = $Exception->getErrors();
+                foreach ($ApiErrors as $Error) {
+                    printf("There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+                    $Error->getFieldPath(),
+                    $Error->getTrigger(),
+                    $Error->getErrorString());
+                }
+                $attempts++;
+                sleep(30);
+                continue;
+            }
+            break;
+        } while($attempts < 5);
 
 	}
 

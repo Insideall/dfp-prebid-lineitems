@@ -13,6 +13,7 @@ class SSPScript extends \App\Dfp\DfpManager
 	protected $sizeKeyName;
 	protected $ssp;
 	protected $currency;
+	protected $licasUpdate;
 
 	//
 	protected $traffickerId;
@@ -95,6 +96,7 @@ class SSPScript extends \App\Dfp\DfpManager
 				->setCreativeList($this->creativesList)
 				->setSizeOverride($this->sizes)
 				->setUpLica();
+
 			$i ++;
 			if(empty($this->ssp))
 			{

@@ -16,21 +16,9 @@ class Buckets
 			echo "Error: You need to choose an value in 'low', 'med', 'high', 'auto','dense'!!!\n";
 			exit;
 		}
-		/*
-		switch ($values) {
-			case "dense":
-				return self::createDenseBuckets();
-			case "low":
-				return self::createLowBuckets();	
-			case "test":
-				return self::createTestBuckets();
-			default:
-				return [];
-		}
-		*/
 	}
 
-	private function createDenseBuckets()
+	private static function createDenseBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 3; $i = $i + 0.01)
@@ -48,7 +36,7 @@ class Buckets
 		return $buckets;
 	}
 
-	private function createAutoBuckets()
+	private static function createAutoBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 5; $i = $i + 0.05)
@@ -66,7 +54,7 @@ class Buckets
 		return $buckets;
 	}
 
-	private function createLowBuckets()
+	private static function createLowBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 5; $i = $i + 0.5)
@@ -76,7 +64,7 @@ class Buckets
 		return $buckets;
 	}
 
-	private function createMedBuckets()
+	private static function createMedBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 20; $i = $i + 0.1)
@@ -86,7 +74,7 @@ class Buckets
 		return $buckets;
 	}
 
-	private function createHighBuckets()
+	private static function createHighBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 20; $i = $i + 0.01)
@@ -96,7 +84,7 @@ class Buckets
 		return $buckets;
 	}
 
-	private function createTestBuckets()
+	private static function createTestBuckets()
 	{
 		$buckets = [];
 		for($i = 0;$i <= 20; $i = $i + 2.5)
