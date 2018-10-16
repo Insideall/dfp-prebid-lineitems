@@ -2,4 +2,4 @@
 adsapi_php.ini
 /vendor
 sftp-config.json
-
+/.php_cs.cache
