@@ -1,14 +1,11 @@
 te<?php
 
-require (__DIR__."/../scriptLoader.php");
+require __DIR__.'/../scriptLoader.php';
 
-$traffickerId  = (new \App\Dfp\UserManager)->getUserId();
+$traffickerId = (new \App\Dfp\UserManager())->getUserId();
 
-if(is_numeric($traffickerId))
-{
+if (is_numeric($traffickerId)) {
 	echo "\n====Connexion OK====\n\n";
-}
-else 
-{
+} else {
 	echo "\n===Connexion KO====\n\n";
 }
