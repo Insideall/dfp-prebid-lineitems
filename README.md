@@ -56,7 +56,17 @@ and you should whether the connexion is OK or not
 Modify the settings in 
 `/script/hb/HeaderBiddingCreation.php`
 * SSP must be an array of ssp you want to create - please enter here the bidder code defined in prebid documentation
-* Price Granularity are standards, defined on [prebid.org](http://prebid.org/prebid-mobile/adops-price-granularity.html).
+* Price Granularity are standards, defined on [prebid.org](http://prebid.org/prebid-mobile/adops-price-granularity.html). You can also define a custom granularity by passing an array of buckets in the following format 
+    
+    ```
+        'priceGranularity' => [ 
+            'buckets' => [
+                ['min' => 0, 'max' => 5, 'increment' => 0.05, 'precision' => 2 /* optional */],
+                ['min' => 5, 'max' => 10, 'increment' => 0.1, 'precision' => 2 /* optional */],
+                ['min' => 10, 'max' => 20, 'increment' => 0.5, 'precision' => 2 /* optional */],
+            ]
+        ]
+    ```
 * Currency is the AdServer Currency (USD, EUR...)
 * Sizes: please enter all sizes allowed on your inventory 
 

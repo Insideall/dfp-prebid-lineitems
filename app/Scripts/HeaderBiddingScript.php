@@ -14,7 +14,7 @@ class HeaderBiddingScript
 	{
 		foreach($params['ssp'] as $ssp)
 		{
-			$params = array(
+			$param = array(
 				"orderName" => "Insideall - Prebid - ".ucfirst($ssp),
 				"advertiserName" => "Insideall - Prebid - ".ucfirst($ssp),
 				"priceGranularity" => $params["priceGranularity"],
@@ -25,7 +25,7 @@ class HeaderBiddingScript
 				"currency"=>$params['currency'],
 				"ssp"=>$ssp
 			);
-			$script = new SSPScript($params);
+			$script = new SSPScript($param);
 
 			$script->createAdUnits();
 		}

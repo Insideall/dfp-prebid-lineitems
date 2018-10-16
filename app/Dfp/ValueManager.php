@@ -35,13 +35,17 @@ class ValueManager extends DfpManager
 	public function convertValuesListToDFPValuesList($valuesList)
 	{
 		//We get from DFP which keys already exists
-		$output = $this->getExistingValuesFromDFP();
+		$existing = $this->getExistingValuesFromDFP();
 
 		//We create a table with only existing keys
 		$existingValuesList = [];
+		$output = [];
 		
-		foreach ($output as $foo) {
+		foreach ($existing as $foo) {
 			array_push($existingValuesList, $foo['valueName']);
+			if (in_array($foo['valueName'], $valuesList)) {
+				array_push($output, $foo);
+			}
 		}
 
 		//We create a list with values to be created
@@ -121,6 +125,7 @@ class ValueManager extends DfpManager
 			$data = $customTargetingService->getCustomTargetingValuesByStatement($statementBuilder->toStatement());
 			if ($data->getResults() !== null)
 			{
+				$totalResultSetSize = $data->getTotalResultSetSize();
 				foreach ($data->getResults() as $value) {
 				    $foo = array(
 				  		"valueId" => $value->getId(),
@@ -128,8 +133,8 @@ class ValueManager extends DfpManager
 				        "valueDisplayName" => $value->getDisplayName()
 				    );
 				    array_push($output, $foo);
-				    $statementBuilder->increaseOffsetBy($pageSize);
 				}
+			    $statementBuilder->increaseOffsetBy($pageSize);
 			}
 		} while ($statementBuilder->getOffset() < $totalResultSetSize);
 		return $output;
