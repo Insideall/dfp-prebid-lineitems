@@ -32,6 +32,7 @@ use Google\AdsApi\Dfp\v201802\StartDateTimeType;
 use Google\AdsApi\Dfp\v201802\Targeting;
 use Google\AdsApi\Dfp\v201802\UnitType;
 use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
+use Google\AdsApi\Dfp\v201802\ApiException;
 
 
 class LineItemManager extends DfpManager
@@ -158,10 +159,30 @@ class LineItemManager extends DfpManager
 		$output = [];
 		$lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
         
-        $results = $lineItemService->createLineItems([$this->setUpHeaderBiddingLineItem()
-            ->setStartDateTimeType(StartDateTimeType::IMMEDIATELY)
-            ->setUnlimitedEndDateTime(true)
-        ]);
+        $attempts =0;
+        do {
+            try
+            {
+                $results = $lineItemService->createLineItems([$this->setUpHeaderBiddingLineItem()
+                    ->setStartDateTimeType(StartDateTimeType::IMMEDIATELY)
+                    ->setUnlimitedEndDateTime(true)
+                ]);
+            } catch (ApiException $Exception) {
+                echo "\n\n======EXCEPTION======\n\n";
+                $ApiErrors = $Exception->getErrors();
+                foreach ($ApiErrors as $Error) {
+                    printf("There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+                    $Error->getFieldPath(),
+                    $Error->getTrigger(),
+                    $Error->getErrorString());
+                }
+                $attempts++;
+                sleep(30);
+                continue;
+            }
+            break;
+        } while($attempts < 5);
+
 
         foreach ($results as $i => $lineItem) {
             $foo = array(
@@ -178,11 +199,30 @@ class LineItemManager extends DfpManager
         $output = [];
 
         $lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
-        $results = $lineItemService->updateLineItems([$this->setUpHeaderBiddingLineItem()
-            ->setId($lineItem->getId())
-            ->setStartDateTime($lineItem->getStartDateTime())
-            ->setUnlimitedEndDateTime(true)
-        ]);
+        $attempts =0;
+        do {
+            try
+            {
+                $results = $lineItemService->updateLineItems([$this->setUpHeaderBiddingLineItem()
+                    ->setId($lineItem->getId())
+                    ->setStartDateTime($lineItem->getStartDateTime())
+                    ->setUnlimitedEndDateTime(true)
+                ]);
+            } catch (ApiException $Exception) {
+                echo "\n\n======EXCEPTION======\n\n";
+                $ApiErrors = $Exception->getErrors();
+                foreach ($ApiErrors as $Error) {
+                    printf("There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+                    $Error->getFieldPath(),
+                    $Error->getTrigger(),
+                    $Error->getErrorString());
+                }
+                $attempts++;
+                sleep(30);
+                continue;
+            }
+            break;
+        } while($attempts < 5);
         
         foreach ($results as $i => $lineItem) {
             $foo = array(

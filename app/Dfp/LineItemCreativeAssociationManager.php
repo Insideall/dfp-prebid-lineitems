@@ -12,6 +12,7 @@ use Google\AdsApi\Dfp\v201802\LineItemCreativeAssociation;
 use Google\AdsApi\Dfp\v201802\LineItemCreativeAssociationService;
 use Google\AdsApi\Dfp\v201802\Size;
 use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
+use Google\AdsApi\Dfp\v201802\ApiException;
 
 
 class LineItemCreativeAssociationManager extends DfpManager
@@ -62,7 +63,29 @@ class LineItemCreativeAssociationManager extends DfpManager
     private function UpdateLicas($licasToBeUpdated)
     {
         $licaService = $this->dfpServices->get($this->session, LineItemCreativeAssociationService::class);
-        $results = $licaService->updateLineItemCreativeAssociations($this->createLicaObject($licasToBeUpdated));
+        $attempts = 0;
+
+        do {
+            try
+            {
+                $results = $licaService->updateLineItemCreativeAssociations($this->createLicaObject($licasToBeUpdated));
+            } catch (ApiException $Exception) {
+                echo "\n\n======EXCEPTION======\n\n";
+                $ApiErrors = $Exception->getErrors();
+                foreach ($ApiErrors as $Error) {
+                    printf("There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+                    $Error->getFieldPath(),
+                    $Error->getTrigger(),
+                    $Error->getErrorString());
+                }
+                $attempts++;
+                sleep(30);
+                continue;
+            }
+            break;
+        } while($attempts < 5);
+
+        
         /*
         foreach ($results as $i => $lica) {
             printf(
@@ -80,19 +103,26 @@ class LineItemCreativeAssociationManager extends DfpManager
     private function CreateLicas($licasToBeCreated)
     {
         $licaService = $this->dfpServices->get($this->session, LineItemCreativeAssociationService::class);
-        $results = $licaService->createLineItemCreativeAssociations($this->createLicaObject($licasToBeCreated));
-        /*
-        foreach ($results as $i => $lica) {
-            printf(
-                "%d) LICA with line item ID %d, creative ID %d, and status '%s' was "
-                . "created.\n",
-                $i,
-                $lica->getLineItemId(),
-                $lica->getCreativeId(),
-                $lica->getStatus()
-            );
-        }
-        */
+        $attempts = 0;
+        do {
+            try
+            {
+                $results = $licaService->createLineItemCreativeAssociations($this->createLicaObject($licasToBeCreated));
+            } catch (ApiException $Exception) {
+                echo "\n\n======EXCEPTION======\n\n";
+                $ApiErrors = $Exception->getErrors();
+                foreach ($ApiErrors as $Error) {
+                printf("There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+                    $Error->getFieldPath(),
+                    $Error->getTrigger(),
+                    $Error->getErrorString());
+                }
+                $attempts++;
+                sleep(30);
+                continue;
+            }
+            break;
+        } while($attempts < 5);
         
     }
 
