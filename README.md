@@ -36,7 +36,7 @@ You will need credentials to access your DFP account programmatically. This summ
 `$ composer require googleads/googleads-php-lib
 3. Rename key
    * Rename the Google credentials key you previously downloaded (`[something].json`) to `googleServiceAccount.json` and move it to the project root folder
-4. Make a copy of [adsapi_php.ini](https://github.com/googleads/googleads-php-lib/blob/master/examples/Dfp/adsapi_php.ini) and save it into the project root folder.
+4. Make a copy of [adsapi_php.ini](https://github.com/googleads/googleads-php-lib/blob/master/examples/AdManager/adsapi_php.ini) and save it into the project root folder.
 5. In `adsapi_php.ini`, set the required fields:
    * `application_name` is the name of the application you used to get your Google developer credentials
    * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
@@ -76,8 +76,6 @@ Then, from the root of the repository, run:
 `php script/hb/HeaderBiddingCreation.php`
 
 You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
-
-*Note:  an exception can appears during the line items creation process - Restart HeaderBiddingCreation.php with the same setup*
 
 *Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
 
