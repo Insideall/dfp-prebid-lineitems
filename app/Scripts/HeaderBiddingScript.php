@@ -13,8 +13,8 @@ class HeaderBiddingScript
 	{
 		foreach ($params['ssp'] as $ssp) {
 			$param = [
-				'orderName' => 'Insideall - Prebid - '.ucfirst($ssp),
-				'advertiserName' => 'Insideall - Prebid - '.ucfirst($ssp),
+				'orderName' => $params['orderPrefix'].ucfirst($ssp),
+				'advertiserName' => $params['orderPrefix'].ucfirst($ssp),
 				'priceGranularity' => $params['priceGranularity'],
 				'sizes' => $params['sizes'],
 				'priceKeyName' => substr("hb_pb_$ssp", 0, 20),
@@ -32,8 +32,8 @@ class HeaderBiddingScript
 	public static function createGlobalAdunits($params)
 	{
 		$params = [
-			'orderName' => 'Insideall - Prebid',
-			'advertiserName' => 'Insideall - Prebid',
+			'orderName' => $params['orderPrefix'],
+			'advertiserName' => $params['orderPrefix'],
 			'priceGranularity' => $params['priceGranularity'],
 			'sizes' => $params['sizes'],
 			'priceKeyName' => substr('hb_pb', 0, 20),

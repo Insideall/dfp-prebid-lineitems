@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\CustomTargetingKey;
-use Google\AdsApi\Dfp\v201802\CustomTargetingKeyType;
-use Google\AdsApi\Dfp\v201802\CustomTargetingService;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\CustomTargetingKey;
+use Google\AdsApi\AdManager\v201811\CustomTargetingKeyType;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
 
-class KeyManager extends DfpManager
+
+class KeyManager extends Manager
 {
 	public function setUpCustomTargetingKey($keyName)
 	{
@@ -23,7 +23,7 @@ class KeyManager extends DfpManager
 	public function createCustomTargetingKey($keyName)
 	{
 		$output = [];
-		$customTargetingService = $this->dfpServices->get($this->session, CustomTargetingService::class);
+		$customTargetingService = $this->serviceFactory->createCustomTargetingService($this->session);
 		$key = new CustomTargetingKey();
 		$key->setDisplayName($keyName);
 		$key->setName($keyName);
@@ -45,7 +45,7 @@ class KeyManager extends DfpManager
 	public function getAllCustomTargetingKeys()
 	{
 		$output = [];
-		$customTargetingService = $this->dfpServices->get($this->session, CustomTargetingService::class);
+		$customTargetingService = $this->serviceFactory->createCustomTargetingService($this->session);
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC');
 		$data = $customTargetingService->getCustomTargetingKeysByStatement($statementBuilder->toStatement());
 		if (null == $data->getResults()) {
@@ -66,7 +66,7 @@ class KeyManager extends DfpManager
 	public function getCustomTargetingKey($keyName)
 	{
 		$output = [];
-		$customTargetingService = $this->dfpServices->get($this->session, CustomTargetingService::class);
+		$customTargetingService = $this->serviceFactory->createCustomTargetingService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
 			->where('name = :name')

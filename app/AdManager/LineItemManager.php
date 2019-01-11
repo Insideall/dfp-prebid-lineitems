@@ -1,31 +1,31 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\AdUnitTargeting;
-use Google\AdsApi\Dfp\v201802\CostType;
-use Google\AdsApi\Dfp\v201802\CreativePlaceholder;
-use Google\AdsApi\Dfp\v201802\CreativeRotationType;
-use Google\AdsApi\Dfp\v201802\CustomCriteria;
-use Google\AdsApi\Dfp\v201802\CustomCriteriaComparisonOperator;
-use Google\AdsApi\Dfp\v201802\CustomCriteriaSet;
-use Google\AdsApi\Dfp\v201802\CustomCriteriaSetLogicalOperator;
-use Google\AdsApi\Dfp\v201802\Goal;
-use Google\AdsApi\Dfp\v201802\GoalType;
-use Google\AdsApi\Dfp\v201802\InventoryTargeting;
-use Google\AdsApi\Dfp\v201802\LineItem;
-use Google\AdsApi\Dfp\v201802\LineItemService;
-use Google\AdsApi\Dfp\v201802\LineItemType;
-use Google\AdsApi\Dfp\v201802\Money;
-use Google\AdsApi\Dfp\v201802\Size;
-use Google\AdsApi\Dfp\v201802\StartDateTimeType;
-use Google\AdsApi\Dfp\v201802\Targeting;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
-use Google\AdsApi\Dfp\v201802\ApiException;
+use Google\AdsApi\AdManager\v201811\AdUnitTargeting;
+use Google\AdsApi\AdManager\v201811\CostType;
+use Google\AdsApi\AdManager\v201811\CreativePlaceholder;
+use Google\AdsApi\AdManager\v201811\CreativeRotationType;
+use Google\AdsApi\AdManager\v201811\CustomCriteria;
+use Google\AdsApi\AdManager\v201811\CustomCriteriaComparisonOperator;
+use Google\AdsApi\AdManager\v201811\CustomCriteriaSet;
+use Google\AdsApi\AdManager\v201811\CustomCriteriaSetLogicalOperator;
+use Google\AdsApi\AdManager\v201811\Goal;
+use Google\AdsApi\AdManager\v201811\GoalType;
+use Google\AdsApi\AdManager\v201811\InventoryTargeting;
+use Google\AdsApi\AdManager\v201811\LineItem;
+use Google\AdsApi\AdManager\v201811\LineItemService;
+use Google\AdsApi\AdManager\v201811\LineItemType;
+use Google\AdsApi\AdManager\v201811\Money;
+use Google\AdsApi\AdManager\v201811\Size;
+use Google\AdsApi\AdManager\v201811\StartDateTimeType;
+use Google\AdsApi\AdManager\v201811\Targeting;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\ApiException;
 
-class LineItemManager extends DfpManager
+class LineItemManager extends Manager
 {
 	protected $orderId;
 	protected $sizes;
@@ -117,7 +117,7 @@ class LineItemManager extends DfpManager
 	public function getAllLineItems()
 	{
 		$output = [];
-		$lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
+		$lineItemService = $this->serviceFactory->createLineItemService($this->session);
 
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC');
 		$data = $lineItemService->getLineItemsByStatement($statementBuilder->toStatement());
@@ -134,7 +134,7 @@ class LineItemManager extends DfpManager
 	public function getLineItem()
 	{
 		$output = '';
-		$lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
+		$lineItemService = $this->serviceFactory->createLineItemService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
 			->where('name = :name AND orderId = :orderId')
@@ -153,7 +153,7 @@ class LineItemManager extends DfpManager
 	public function createLineItem()
 	{
 		$output = [];
-		$lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
+		$lineItemService = $this->serviceFactory->createLineItemService($this->session);
 
 		$attempts = 0;
 		do {
@@ -195,7 +195,7 @@ class LineItemManager extends DfpManager
 	{
 		$output = [];
 
-		$lineItemService = $this->dfpServices->get($this->session, LineItemService::class);
+		$lineItemService = $this->serviceFactory->createLineItemService($this->session);
 		$attempts = 0;
 		do {
 			try {

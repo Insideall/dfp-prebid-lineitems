@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\Order;
-use Google\AdsApi\Dfp\v201802\OrderService;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
-use Google\AdsApi\Dfp\v201802\ApproveOrders as ApproveOrdersAction;
-use Google\AdsApi\Dfp\v201802\ApiException;
+use Google\AdsApi\AdManager\v201811\Order;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\ApproveOrders as ApproveOrdersAction;
+use Google\AdsApi\AdManager\v201811\ApiException;
 
-class OrderManager extends DfpManager
+
+class OrderManager extends Manager
 {
 	public function setUpOrder($orderName, $advertiserId, $traffickerId)
 	{
@@ -24,7 +24,7 @@ class OrderManager extends DfpManager
 	public function getAllOrders()
 	{
 		$output = [];
-		$orderService = $this->dfpServices->get($this->session, OrderService::class);
+		$orderService = $this->serviceFactory->createOrderService($this->session);
 
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC');
 		$data = $orderService->getOrdersByStatement($statementBuilder->toStatement());
@@ -47,7 +47,7 @@ class OrderManager extends DfpManager
 
 	public function approveOrder($orderId)
 	{
-		$orderService = $this->dfpServices->get($this->session, OrderService::class);
+		$orderService = $this->serviceFactory->createOrderService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->where('id = :id')
 			->withBindVariableValue('id', $orderId);
@@ -83,7 +83,7 @@ class OrderManager extends DfpManager
 	public function getOrder($orderName)
 	{
 		$output = [];
-		$orderService = $this->dfpServices->get($this->session, OrderService::class);
+		$orderService = $this->serviceFactory->createOrderService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
 			->where('name = :name')
@@ -105,7 +105,7 @@ class OrderManager extends DfpManager
 	public function createOrder($orderName, $advertiserId, $traffickerId)
 	{
 		$output = [];
-		$orderService = $this->dfpServices->get($this->session, OrderService::class);
+		$orderService = $this->serviceFactory->createOrderService($this->session);
 		$order = new Order();
 		$order->setName($orderName);
 		$order->setAdvertiserId($advertiserId);

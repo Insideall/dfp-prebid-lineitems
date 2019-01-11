@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\NetworkService;
+use Google\AdsApi\AdManager\v201811\NetworkService;
 
-class NetworkManager extends DfpManager
+class NetworkManager extends Manager
 {
 	protected $dfpServices;
 	protected $session;
 
 	public function getCurrentNetwork()
 	{
-		$networkService = $this->dfpServices->get($this->session, NetworkService::class);
+		$networkService = $this->serviceFactory->createNetworkService($this->session);
 
 		$network = $networkService->getCurrentNetwork();
 
@@ -27,7 +27,7 @@ class NetworkManager extends DfpManager
 
 	public function makeTestNetwork()
 	{
-		$networkService = $this->dfpServices->get($this->session, NetworkService::class);
+		$networkService = $this->serviceFactory->createNetworkService($this->session);
 		$network = $networkService->makeTestNetwork();
 
 		printf(

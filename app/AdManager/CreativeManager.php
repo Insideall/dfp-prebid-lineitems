@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
-use Google\AdsApi\Dfp\v201802\CreativeService;
-use Google\AdsApi\Dfp\v201802\ThirdPartyCreative;
-use Google\AdsApi\Dfp\v201802\Size;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\CreativeService;
+use Google\AdsApi\AdManager\v201811\ThirdPartyCreative;
+use Google\AdsApi\AdManager\v201811\Size;
 
-class CreativeManager extends DfpManager
+class CreativeManager extends Manager
 {
 	protected $ssp;
 	protected $advertiserId;
@@ -44,6 +44,8 @@ class CreativeManager extends DfpManager
 		foreach ($creativeNameList as $creativeName) {
 			if (empty(($foo = $this->getCreative($creativeName)))) {
 				$foo = $this->createCreative($creativeName, $this->createSnippet(), $this->advertiserId);
+			} else {
+				$foo = $this->updateCreative($creativeName, $this->createSnippet(), $this->advertiserId);
 			}
 			array_push($output, $foo[0]);
 		}
@@ -54,7 +56,7 @@ class CreativeManager extends DfpManager
 	public function getAllCreatives()
 	{
 		$output = [];
-		$creativeService = $this->dfpServices->get($this->session, CreativeService::class);
+		$creativeService = $this->serviceFactory->createCreativeService($this->session);
 		$pageSize = StatementBuilder::SUGGESTED_PAGE_LIMIT;
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC')
 			->limit($pageSize);
@@ -82,7 +84,7 @@ class CreativeManager extends DfpManager
 	public function getCreative($creativeName)
 	{
 		$output = [];
-		$creativeService = $this->dfpServices->get($this->session, CreativeService::class);
+		$creativeService = $this->serviceFactory->createCreativeService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
 			->where('name = :name AND advertiserId = :advertiserId')
@@ -105,7 +107,7 @@ class CreativeManager extends DfpManager
 	public function createCreative($creativeName, $snippet, $advertiserId)
 	{
 		$output = [];
-		$creativeService = $this->dfpServices->get($this->session, CreativeService::class);
+		$creativeService = $this->serviceFactory->createCreativeService($this->session);
 		$size = new Size();
 		$size->setWidth(1);
 		$size->setHeight(1);
@@ -132,6 +134,64 @@ class CreativeManager extends DfpManager
 		return $output;
 	}
 
+	public function updateCreative($creativeName, $snippet, $advertiserId)
+	{
+		$output = [];
+		$creativeService = $this->serviceFactory->createCreativeService($this->session);
+		$statementBuilder = (new StatementBuilder())->where('name = :name')
+            ->orderBy('id ASC')
+            ->limit(1)
+            ->withBindVariableValue('name', $creativeName);
+        // Get the creative.
+        $page = $creativeService->getCreativesByStatement(
+            $statementBuilder->toStatement()
+        );
+
+        $creative = $page->getResults()[0];
+		$size = new Size();
+		$size->setWidth(1);
+		$size->setHeight(1);
+		$size->setIsAspectRatio(false);
+
+		$creative->setName($creativeName)
+			->setAdvertiserId($advertiserId)
+			->setIsSafeFrameCompatible(true)
+			->setSnippet($snippet)
+			->setSize($size);
+
+		// Create the order on the server.
+		$results = $creativeService->updateCreatives([$creative]);
+		foreach ($results as $creative) {
+			$foo = [
+				'creativeId' => $creative->getId(),
+				'creativeName' => $creative->getName(),
+			];
+			array_push($output, $foo);
+		}
+
+		return $output;
+	}
+
+
+	private function createSnippet()
+	{
+		$snippet = "<script src = 'https://cdn.jsdelivr.net/npm/prebid-universal-creative@latest/dist/creative.js'></script>\n";
+		$snippet .= "<script>\n";
+		$snippet .= "\tvar ucTagData = {};\n";
+		$snippet .= "\tucTagData.adServerDomain = '';\n";
+		$snippet .= "\tucTagData.pubUrl = '%%PATTERN:url%%';\n";
+		$snippet .= "\tucTagData.targetingMap = %%PATTERN:TARGETINGMAP%%;\n";
+		$snippet .= "\ttry {\n";
+		$snippet .= "\t\tucTag.renderAd(document, ucTagData);\n";
+		$snippet .= "\t} catch (e) {\n";
+    	$snippet .= "\t\tconsole.log(e);\n";
+    	$snippet .= "\t}\n";
+    	$snippet .= "</script>\n";
+
+    	return $snippet;
+
+	}
+	/*
 	private function createSnippet()
 	{
 		if (empty($this->ssp)) {
@@ -156,4 +216,6 @@ class CreativeManager extends DfpManager
 
 		return $snippet;
 	}
+
+	*/
 }

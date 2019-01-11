@@ -1,20 +1,16 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\UserService;
-use Google\AdsApi\Dfp\v201802\User;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
-
-class UserManager extends DfpManager
+class UserManager extends Manager
 {
 	protected $user;
 
 	public function getCurrentUser()
 	{
-		$userService = $this->dfpServices->get($this->session, UserService::class);
+		$userService = $this->serviceFactory->createUserService($this->session);
 
 		$user = $userService->getCurrentUser();
 		$output = [
@@ -30,7 +26,7 @@ class UserManager extends DfpManager
 
 	public function createUser()
 	{
-		$userService = $this->dfpServices->get($this->session, UserService::class);
+		$userService = $this->serviceFactory->createUserService($this->session);
 		$user = new User();
 		$user->setName('Gabriel');
 		$user->setEmail('gabriel@insideall.com');
@@ -58,7 +54,7 @@ class UserManager extends DfpManager
 
 	public function getAllUsers()
 	{
-		$userService = $this->dfpServices->get($this->session, UserService::class);
+		$userService = $this->serviceFactory->createUserService($this->session);
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC');
 		$data = $userService->getUsersByStatement(
 			$statementBuilder->toStatement()

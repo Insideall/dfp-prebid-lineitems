@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\LineItemCreativeAssociation;
-use Google\AdsApi\Dfp\v201802\LineItemCreativeAssociationService;
-use Google\AdsApi\Dfp\v201802\Size;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
-use Google\AdsApi\Dfp\v201802\ApiException;
+use Google\AdsApi\AdManager\v201811\LineItemCreativeAssociation;
+use Google\AdsApi\AdManager\v201811\LineItemCreativeAssociationService;
+use Google\AdsApi\AdManager\v201811\Size;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\ApiException;
 
-class LineItemCreativeAssociationManager extends DfpManager
+class LineItemCreativeAssociationManager extends Manager
 {
 	protected $lineItem;
 	protected $creativeList;
@@ -60,7 +60,7 @@ class LineItemCreativeAssociationManager extends DfpManager
 
 	private function UpdateLicas($licasToBeUpdated)
 	{
-		$licaService = $this->dfpServices->get($this->session, LineItemCreativeAssociationService::class);
+		$licaService = $this->serviceFactory->createLineItemCreativeAssociationService($this->session);
 		$attempts = 0;
 
 		do {
@@ -100,7 +100,7 @@ class LineItemCreativeAssociationManager extends DfpManager
 
 	private function CreateLicas($licasToBeCreated)
 	{
-		$licaService = $this->dfpServices->get($this->session, LineItemCreativeAssociationService::class);
+		$licaService = $this->serviceFactory->createLineItemCreativeAssociationService($this->session);
 		$attempts = 0;
 		do {
 			try {
@@ -127,7 +127,7 @@ class LineItemCreativeAssociationManager extends DfpManager
 	private function GetLicasForLineItem()
 	{
 		$output = [];
-		$licaService = $this->dfpServices->get($this->session, LineItemCreativeAssociationService::class);
+		$licaService = $this->serviceFactory->createLineItemCreativeAssociationService($this->session);
 		$pageSize = StatementBuilder::SUGGESTED_PAGE_LIMIT;
 		$statementBuilder = (new StatementBuilder())->where('lineItemId = :lineItemId')
 			->orderBy('lineItemId ASC, creativeId ASC')

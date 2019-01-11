@@ -1,8 +1,11 @@
 <?php
 
-require __DIR__.'/../scriptLoader.php';
+putenv('HOME='.dirname(__DIR__)."/../");
+require __DIR__.'/../../vendor/autoload.php';
 
 use App\Scripts\HeaderBiddingScript;
+
+
 
 /*
 $buckets = 
@@ -14,15 +17,21 @@ $buckets =
 ]; 
 */
 
+// $entry set import
+require __DIR__.'/../../customerConfig/Bayard.php';
+
+
+/*
 $entry = [
-	'ssp' => ['ix'], // Needs to be bidder code defined in prebid documentation, ie appnexus, rubicon, improvedigital, smartadserver
+	'ssp' => ['appnexus'], // Needs to be bidder code defined in prebid documentation, ie appnexus, rubicon, improvedigital, smartadserver
 	'priceGranularity' => 'dense', // can be 'low', 'med', 'high', 'auto','dense', 'test'
 	'currency' => 'EUR',
-	'sizes' => [[970,250],[970,90],[728,250],[728,90],[320,50],[300,100],[250,250],[300,250],[300,600]]
+	'sizes' => [[120,600],[160,600],[300,50],[300,100],[300,250],[300,600],[300,1000],[320,50],[320,100],[336,280],[728,90],[970,90],[970,150],[970,250],[1000,90],[1000,200],[1000,250],[1000,300]],
+	'orderPrefix' => 'Insideall - Prebid - '
 ];
+*/
 
 $script = new HeaderBiddingScript();
 
 $script->createAdUnits($entry);
 
-//Done: criteo, smartadserver,rubicon,  improve,

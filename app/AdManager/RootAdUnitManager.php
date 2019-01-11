@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\NetworkService;
+use Google\AdsApi\AdManager\v201811\NetworkService;
 
-class RootAdUnitManager extends DfpManager
+class RootAdUnitManager extends Manager
 {
 	public function setRootAdUnit()
 	{
-		$networkService = $this->dfpServices->get($this->session, NetworkService::class);
+		$networkService = $this->serviceFactory->createNetworkService($this->session);
 		$rootAdUnitId = $networkService->getCurrentNetwork()
 			->getEffectiveRootAdUnitId();
 

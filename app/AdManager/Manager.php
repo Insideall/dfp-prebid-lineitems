@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
+use Google\AdsApi\AdManager\AdManagerSession;
+use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
-use Google\AdsApi\Dfp\DfpServices;
-use Google\AdsApi\Dfp\DfpSessionBuilder;
 
-class DfpManager
+use Google\AdsApi\AdManager\v201811\ServiceFactory;
+class Manager
 {
-	protected $dfpServices;
+	protected $serviceFactory;
 	protected $session;
 
 	public function __construct()
@@ -19,12 +20,12 @@ class DfpManager
 			->fromFile()
 			->build();
 
-		$this->session = (new DfpSessionBuilder())
+		$this->session = (new AdManagerSessionBuilder())
 			->fromFile()
 			->withOAuth2Credential($oAuth2Credential)
 			->build();
 
-		$this->dfpServices = new DfpServices();
+		$this->serviceFactory = new ServiceFactory();
 	}
 
 	public function getDfpServices()

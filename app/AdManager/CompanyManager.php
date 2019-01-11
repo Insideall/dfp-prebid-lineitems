@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Dfp;
+namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\Dfp\v201802\Company;
-use Google\AdsApi\Dfp\v201802\CompanyService;
-use Google\AdsApi\Dfp\v201802\CompanyType;
-use Google\AdsApi\Dfp\Util\v201802\StatementBuilder;
+use Google\AdsApi\AdManager\v201811\Company;
+use Google\AdsApi\AdManager\v201811\CompanyType;
+use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
 
-class CompanyManager extends DfpManager
+class CompanyManager extends Manager
 {
 	public function setUpCompany($companyName)
 	{
@@ -24,7 +23,7 @@ class CompanyManager extends DfpManager
 	{
 		$output = [];
 
-		$companyService = $this->dfpServices->get($this->session, CompanyService::class);
+		$companyService = $this->serviceFactory->createCompanyService($this->session);
 		$company = new Company();
 		$company->setName($companyName);
 		$company->setType(CompanyType::ADVERTISER);
@@ -45,7 +44,7 @@ class CompanyManager extends DfpManager
 	public function getAllCompanies()
 	{
 		$output = [];
-		$companyService = $this->dfpServices->get($this->session, CompanyService::class);
+		$companyService = $this->serviceFactory->createCompanyService($this->session);
 		$statementBuilder = (new StatementBuilder())->orderBy('id ASC');
 		$data = $companyService->getCompaniesByStatement($statementBuilder->toStatement());
 		if (null !== $data->getResults()) {
@@ -64,7 +63,7 @@ class CompanyManager extends DfpManager
 	public function getCompany($companyName)
 	{
 		$output = [];
-		$companyService = $this->dfpServices->get($this->session, CompanyService::class);
+		$companyService = $this->serviceFactory->createCompanyService($this->session);
 		$statementBuilder = (new StatementBuilder())
 			->orderBy('id ASC')
 			->where('name = :name')
