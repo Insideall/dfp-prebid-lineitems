@@ -4,8 +4,6 @@ namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\AdManager\v201811\NetworkService;
-
 class NetworkManager extends Manager
 {
 	protected $dfpServices;

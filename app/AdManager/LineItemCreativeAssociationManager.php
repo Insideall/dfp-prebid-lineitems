@@ -5,7 +5,6 @@ namespace App\AdManager;
 require __DIR__.'/../../vendor/autoload.php';
 
 use Google\AdsApi\AdManager\v201811\LineItemCreativeAssociation;
-use Google\AdsApi\AdManager\v201811\LineItemCreativeAssociationService;
 use Google\AdsApi\AdManager\v201811\Size;
 use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
 use Google\AdsApi\AdManager\v201811\ApiException;
