@@ -5,8 +5,10 @@ namespace App\AdManager;
 require __DIR__.'/../../vendor/autoload.php';
 
 
+use Google\AdsApi\AdManager\v201811\ActivateCustomTargetingValues;
 use Google\AdsApi\AdManager\v201811\CustomTargetingValue;
 use Google\AdsApi\AdManager\v201811\CustomTargetingValueMatchType;
+use Google\AdsApi\AdManager\v201811\Statement;
 use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
 
 class ValueManager extends Manager
@@ -33,27 +35,39 @@ class ValueManager extends Manager
 
 		//We create a table with only existing keys
 		$existingValuesList = [];
+		$inactiveValuesList = [];
 		$output = [];
 
 		foreach ($existing as $foo) {
 			array_push($existingValuesList, $foo['valueName']);
 			if (in_array($foo['valueName'], $valuesList)) {
 				array_push($output, $foo);
+				if ($foo['valueStatus'] === 'INACTIVE') {
+					$inactiveValuesList[$foo['valueName']] = $foo['valueId'];
+				}
 			}
 		}
 
 		//We create a list with values to be created
 		$valuesToBeCreated = [];
+		$valuesToBeActivated = [];
 		foreach ($valuesList as $element) {
 			if (!in_array($element, $existingValuesList)) {
 				array_push($valuesToBeCreated, $element);
+			} else if (isset($inactiveValuesList[$element])) {
+				array_push($valuesToBeActivated, $inactiveValuesList[$element]);
 			}
 		}
+
 		if (!empty($valuesToBeCreated)) {
 			$foo = $this->createCustomTargetingValues($valuesToBeCreated);
 			foreach ($foo as $bar) {
 				array_push($output, $bar);
 			}
+		}
+
+		if (!empty($valuesToBeActivated)) {
+			$this->activateCustomTargetingValues($valuesToBeActivated);
 		}
 
 		return $output;
@@ -98,6 +112,20 @@ class ValueManager extends Manager
 		return $output;
 	}
 
+	public function activateCustomTargetingValues($valuesToBeActivated)
+	{
+		$action = new ActivateCustomTargetingValues();
+
+		$statementText = sprintf("WHERE id IN (%s)", implode(',', $valuesToBeActivated));
+		$statement = new Statement($statementText);
+
+		$customTargetingService = $this->serviceFactory->createCustomTargetingService($this->session);
+		$result = $customTargetingService->performCustomTargetingValueAction($action, $statement);
+		if ($result->getNumChanges() !== count($valuesToBeActivated)) {
+			throw new \Exception("Failed to activate key values");
+		}
+	}
+
 	public function getExistingValuesFromAdManager()
 	{
 		$output = [];
@@ -119,6 +147,7 @@ class ValueManager extends Manager
 					$foo = [
 						'valueId' => $value->getId(),
 						'valueName' => $value->getName(),
+						'valueStatus' => $value->getStatus(),
 						'valueDisplayName' => $value->getDisplayName(),
 					];
 					array_push($output, $foo);
