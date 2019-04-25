@@ -8,7 +8,6 @@ use Google\AdsApi\AdManager\v201811\CustomTargetingKey;
 use Google\AdsApi\AdManager\v201811\CustomTargetingKeyType;
 use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
 
-
 class KeyManager extends Manager
 {
 	public function setUpCustomTargetingKey($keyName)

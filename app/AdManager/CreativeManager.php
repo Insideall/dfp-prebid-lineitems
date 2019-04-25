@@ -5,7 +5,6 @@ namespace App\AdManager;
 require __DIR__.'/../../vendor/autoload.php';
 
 use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
-use Google\AdsApi\AdManager\v201811\CreativeService;
 use Google\AdsApi\AdManager\v201811\ThirdPartyCreative;
 use Google\AdsApi\AdManager\v201811\Size;
 
