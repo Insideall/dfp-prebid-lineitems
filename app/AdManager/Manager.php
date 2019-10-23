@@ -8,7 +8,7 @@ use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
 
-use Google\AdsApi\AdManager\v201811\ServiceFactory;
+use Google\AdsApi\AdManager\v201908\ServiceFactory;
 class Manager
 {
 	protected $serviceFactory;

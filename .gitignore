@@ -1,6 +1,8 @@
+adsapi_php.ini.backup
 /googleServiceAccount.json
 adsapi_php.ini
 /vendor
+/customerConfig
 sftp-config.json
 /.php_cs.cache
 /customerConfig

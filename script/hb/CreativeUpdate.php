@@ -3,9 +3,7 @@
 putenv('HOME='.dirname(__DIR__)."/../");
 require __DIR__.'/../../vendor/autoload.php';
 
-
-
-require __DIR__.'/../../customerConfigSample.php';
+require __DIR__.'/../../customerConfig/Bayard.php';
 
 
 use App\Scripts\HeaderBiddingScript;
@@ -24,9 +22,9 @@ $credentials = array(
 );
 
 
+
 $script = new HeaderBiddingScript();
 
 $script->setCredentials($credentials)
-	->createAdUnits($entry)
+	->updateCreatives($entry, "old")
 	->clearCredentials();
-

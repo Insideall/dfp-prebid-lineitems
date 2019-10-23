@@ -4,10 +4,11 @@ namespace App\AdManager;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-use Google\AdsApi\AdManager\Util\v201811\StatementBuilder;
-use Google\AdsApi\AdManager\v201811\CreativeService;
-use Google\AdsApi\AdManager\v201811\ThirdPartyCreative;
-use Google\AdsApi\AdManager\v201811\Size;
+use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
+use Google\AdsApi\AdManager\v201908\CreativeService;
+use Google\AdsApi\AdManager\v201908\ThirdPartyCreative;
+use Google\AdsApi\AdManager\v201908\Size;
+use Google\AdsApi\AdManager\v201908\ApiException;
 
 class CreativeManager extends Manager
 {
@@ -28,8 +29,10 @@ class CreativeManager extends Manager
 		return $this;
 	}
 
-	public function setUpCreatives()
+	public function setUpCreatives($type = "old")
 	{
+		$safeframe = $type == "old" ? false : true;
+		
 		$output = [];
 		//Create a creativeName List
 		$creativeNameList = [];
@@ -43,9 +46,9 @@ class CreativeManager extends Manager
 
 		foreach ($creativeNameList as $creativeName) {
 			if (empty(($foo = $this->getCreative($creativeName)))) {
-				$foo = $this->createCreative($creativeName, $this->createSnippet(), $this->advertiserId);
+				$foo = $this->createCreative($creativeName, $this->createSnippet($type), $this->advertiserId, $safeframe);
 			} else {
-				$foo = $this->updateCreative($creativeName, $this->createSnippet(), $this->advertiserId);
+				$foo = $this->updateCreative($creativeName, $this->createSnippet($type), $this->advertiserId, $safeframe);
 			}
 			array_push($output, $foo[0]);
 		}
@@ -90,7 +93,26 @@ class CreativeManager extends Manager
 			->where('name = :name AND advertiserId = :advertiserId')
 			->WithBindVariableValue('name', $creativeName)
 			->WithBindVariableValue('advertiserId', $this->advertiserId);
-		$data = $creativeService->getCreativesByStatement($statementBuilder->toStatement());
+		do{
+			try{
+				$data = $creativeService->getCreativesByStatement($statementBuilder->toStatement());
+			} catch (ApiException $Exception) {
+				echo "\n\n======EXCEPTION======\n\n";
+				$ApiErrors = $Exception->getErrors();
+				foreach ($ApiErrors as $Error) {
+					printf(
+						"There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+					$Error->getFieldPath(),
+					$Error->getTrigger(),
+					$Error->getErrorString()
+					);
+				}
+				++$attempts;
+				sleep(30);
+				continue;
+			}
+			break;
+		} while ($attempts < 5);
 		if (null !== $data->getResults()) {
 			foreach ($data->getResults() as $creative) {
 				$foo = [
@@ -104,7 +126,7 @@ class CreativeManager extends Manager
 		return $output;
 	}
 
-	public function createCreative($creativeName, $snippet, $advertiserId)
+	public function createCreative($creativeName, $snippet, $advertiserId, $safeframe)
 	{
 		$output = [];
 		$creativeService = $this->serviceFactory->createCreativeService($this->session);
@@ -117,12 +139,31 @@ class CreativeManager extends Manager
 
 		$creative->setName($creativeName)
 			->setAdvertiserId($advertiserId)
-			->setIsSafeFrameCompatible(false)
+			->setIsSafeFrameCompatible($safeframe)
 			->setSnippet($snippet)
 			->setSize($size);
 
 		// Create the order on the server.
-		$results = $creativeService->createCreatives([$creative]);
+		do{
+			try{
+				$results = $creativeService->createCreatives([$creative]);
+			} catch (ApiException $Exception) {
+				echo "\n\n======EXCEPTION======\n\n";
+				$ApiErrors = $Exception->getErrors();
+				foreach ($ApiErrors as $Error) {
+					printf(
+						"There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+					$Error->getFieldPath(),
+					$Error->getTrigger(),
+					$Error->getErrorString()
+					);
+				}
+				++$attempts;
+				sleep(30);
+				continue;
+			}
+			break;
+		} while ($attempts < 5);
 		foreach ($results as $creative) {
 			$foo = [
 				'creativeId' => $creative->getId(),
@@ -134,7 +175,7 @@ class CreativeManager extends Manager
 		return $output;
 	}
 
-	public function updateCreative($creativeName, $snippet, $advertiserId)
+	public function updateCreative($creativeName, $snippet, $advertiserId, $safeframe)
 	{
 		$output = [];
 		$creativeService = $this->serviceFactory->createCreativeService($this->session);
@@ -155,12 +196,32 @@ class CreativeManager extends Manager
 
 		$creative->setName($creativeName)
 			->setAdvertiserId($advertiserId)
-			->setIsSafeFrameCompatible(true)
+			->setIsSafeFrameCompatible($safeframe)
 			->setSnippet($snippet)
 			->setSize($size);
 
 		// Create the order on the server.
-		$results = $creativeService->updateCreatives([$creative]);
+		do {
+			try {
+				$results = $creativeService->updateCreatives([$creative]);
+			} catch (ApiException $Exception) {
+				echo "\n\n======EXCEPTION======\n\n";
+				$ApiErrors = $Exception->getErrors();
+				foreach ($ApiErrors as $Error) {
+					printf(
+						"There was an error on the field '%s', caused by an invalid value '%s', with the error message '%s'\n",
+					$Error->getFieldPath(),
+					$Error->getTrigger(),
+					$Error->getErrorString()
+					);
+				}
+				++$attempts;
+				sleep(30);
+				continue;
+			}
+			break;
+		} while ($attempts < 5);
+		
 		foreach ($results as $creative) {
 			$foo = [
 				'creativeId' => $creative->getId(),
@@ -172,7 +233,7 @@ class CreativeManager extends Manager
 		return $output;
 	}
 
-
+	/*
 	private function createSnippet()
 	{
 		$snippet = "<script src = 'https://cdn.jsdelivr.net/npm/prebid-universal-creative@latest/dist/creative.js'></script>\n";
@@ -191,8 +252,18 @@ class CreativeManager extends Manager
     	return $snippet;
 
 	}
-	/*
-	private function createSnippet()
+	*/
+
+	private function createSnippet($type)
+	{
+		if($type == "old"){
+			return $this->createOldSnippet();
+		} else {
+			return $this->createNewSnippet();
+		}
+	}
+
+	private function createOldSnippet()
 	{
 		if (empty($this->ssp)) {
 			$key = substr('hb_adid', 0, 20);
@@ -217,5 +288,25 @@ class CreativeManager extends Manager
 		return $snippet;
 	}
 
-	*/
+	private function createNewSnippet()
+	{
+		$snippet = "<script src = 'https://cdn.jsdelivr.net/npm/prebid-universal-creative@latest/dist/creative.js'></script>\n";
+		$snippet .= "<script>\n";
+		$snippet .= "\tvar ucTagData = {};\n";
+		$snippet .= "\tucTagData.adServerDomain = '';\n";
+		$snippet .= "\tucTagData.pubUrl = '%%PATTERN:url%%';\n";
+		$snippet .= "\tucTagData.targetingMap = %%PATTERN:TARGETINGMAP%%;\n";
+		$snippet .= "\tucTagData.hbPb = \"%%PATTERN:hb_pb%%\";\n";
+		$snippet .= "\ttry {\n";
+		$snippet .= "\t\tucTag.renderAd(document, ucTagData);\n";
+		$snippet .= "\t} catch (e) {\n";
+    	$snippet .= "\t\tconsole.log(e);\n";
+    	$snippet .= "\t}\n";
+    	$snippet .= "</script>\n";
+
+    	return $snippet;
+
+	}
+
+	
 }

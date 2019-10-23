@@ -66,9 +66,7 @@ class SSPScript extends \App\AdManager\Manager
 		$this->dfpValuesList = $valuesManager->convertValuesListToDFPValuesList($this->valuesList);
 		echo "Values List Created\n";
 
-
-
-
+		
 		$creativeManager = new \App\AdManager\CreativeManager();
 		$creativeManager->setSsp($this->ssp)
 			->setAdvertiserId($this->advertiserId);
@@ -108,7 +106,21 @@ class SSPScript extends \App\AdManager\Manager
 
 			echo round(($i / count($this->dfpValuesList)) * 100, 1)."% done\n\n";
 		}
-
+		
 		(new \App\AdManager\OrderManager())->approveOrder($this->orderId);
+		
 	}
+
+
+	public function updateCreatives($type = "old")
+	{
+		$this->advertiserId = (new \App\AdManager\CompanyManager())->setUpCompany($this->advertiserName);
+		echo 'AdvertiserName : '.$this->advertiserName."\tAdvertiserId: ".$this->advertiserId."\n";
+
+		$creativeManager = new \App\AdManager\CreativeManager();
+		$creativeManager->setSsp($this->ssp)
+			->setAdvertiserId($this->advertiserId);
+		$this->creativesList = $creativeManager->setUpCreatives($type);
+	}
+
 }

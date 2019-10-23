@@ -52,7 +52,7 @@ class Buckets
 
 	private static function create($priceGranularity)
 	{
-		$buckets = [];
+		$buckets = ["0.00"];
 		$lastValue = 0;
 		foreach ($priceGranularity as $value) {
 			$precision = isset($value['precision']) ? $value['precision'] : 2;
