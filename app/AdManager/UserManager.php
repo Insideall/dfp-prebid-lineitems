@@ -2,8 +2,6 @@
 
 namespace App\AdManager;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 class UserManager extends Manager
 {
 	protected $user;

@@ -2,12 +2,9 @@
 
 namespace App\AdManager;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 use Google\AdsApi\AdManager\v201908\CustomTargetingKey;
 use Google\AdsApi\AdManager\v201908\CustomTargetingKeyType;
 use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
-
 
 class KeyManager extends Manager
 {

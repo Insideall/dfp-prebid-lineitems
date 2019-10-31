@@ -14,6 +14,7 @@ class SSPScript extends \App\AdManager\Manager
 	protected $ssp;
 	protected $currency;
 	protected $licasUpdate;
+	protected $geoTargetingList;
 
 	protected $traffickerId;
 	protected $advertiserId;
@@ -25,6 +26,7 @@ class SSPScript extends \App\AdManager\Manager
 	protected $dfpValuesList;
 	protected $creativesList;
 	protected $rootAdUnitId;
+	protected $geoTargeting;
 
 	public function __construct($params)
 	{
@@ -35,13 +37,16 @@ class SSPScript extends \App\AdManager\Manager
 
 	public function createAdUnits()
 	{
+		
+		if($this->geoTargetingList !== null){
+			$this->geoTargeting = (new \App\AdManager\GeoTargetingManager)->setGeoTargeting($this->geoTargetingList);
+		}
+
 		$this->valuesList = Buckets::createBuckets($this->priceGranularity);
 
 		//Get the Trafficker Id
 		$this->traffickerId = (new \App\AdManager\UserManager())->getUserId();
 		echo 'TraffickerId: '.$this->traffickerId."\n";
-
-		
 
 		//Get the Advertising Company Id
 		$this->advertiserId = (new \App\AdManager\CompanyManager())->setUpCompany($this->advertiserName);
@@ -77,6 +82,9 @@ class SSPScript extends \App\AdManager\Manager
 		$this->rootAdUnitId = (new \App\AdManager\RootAdUnitManager())->setRootAdUnit();
 		echo 'rootAdUnitId: '.$this->rootAdUnitId."\n";
 
+
+
+
 		$i = 0;
 
 		foreach ($this->dfpValuesList as $dfpValue) {
@@ -90,6 +98,9 @@ class SSPScript extends \App\AdManager\Manager
 				->setBucket($dfpValue['valueName'])
 				->setRootAdUnitId($this->rootAdUnitId)
 				->setLineItemName();
+			if($this->geoTargeting !== null){
+				$lineItemManager->setGeoTargeting($this->geoTargeting);
+			}
 			$lineItem = $lineItemManager->setUpLineItem();
 			$licaManager = new \App\AdManager\LineItemCreativeAssociationManager();
 			$licaManager->setLineItem($lineItem)

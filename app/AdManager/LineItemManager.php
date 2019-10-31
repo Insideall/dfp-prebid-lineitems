@@ -2,8 +2,6 @@
 
 namespace App\AdManager;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 use Google\AdsApi\AdManager\v201908\AdUnitTargeting;
 use Google\AdsApi\AdManager\v201908\CostType;
 use Google\AdsApi\AdManager\v201908\CreativePlaceholder;
@@ -36,53 +34,54 @@ class LineItemManager extends Manager
 	protected $bucket;
 	protected $lineItem;
 	protected $lineItemName;
+	protected $geoTargeting;
+
 
 	public function setOrderId($orderId)
 	{
 		$this->orderId = $orderId;
-
 		return $this;
 	}
 
 	public function setSizes($sizes)
 	{
 		$this->sizes = $sizes;
-
 		return $this;
 	}
 
 	public function setSsp($ssp)
 	{
 		$this->ssp = $ssp;
-
 		return $this;
 	}
 
 	public function setCurrency($currency)
 	{
 		$this->currency = $currency;
-
 		return $this;
 	}
 
 	public function setKeyId($keyId)
 	{
 		$this->keyId = $keyId;
-
 		return $this;
 	}
 
 	public function setValueId($valueId)
 	{
 		$this->valueId = $valueId;
-
 		return $this;
 	}
 
 	public function setBucket($bucket)
 	{
 		$this->bucket = $bucket;
+		return $this;
+	}
 
+	public function setGeoTargeting($geoTargeting)
+	{
+		$this->geoTargeting = $geoTargeting;
 		return $this;
 	}
 
@@ -250,6 +249,10 @@ class LineItemManager extends Manager
 		$inventoryTargeting->setTargetedAdUnits([$adUnitTargeting]);
 
 		$targeting->setInventoryTargeting($inventoryTargeting);
+
+		if($this->geoTargeting !== null){
+			$targeting->setGeoTargeting($this->geoTargeting);
+		}
 
 		// Create Key/Values Targeting
 

@@ -2,9 +2,6 @@
 
 namespace App\AdManager;
 
-require __DIR__.'/../../vendor/autoload.php';
-
-
 use Google\AdsApi\AdManager\v201908\CustomTargetingValue;
 use Google\AdsApi\AdManager\v201908\CustomTargetingValueMatchType;
 use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;

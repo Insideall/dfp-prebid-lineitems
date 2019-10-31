@@ -3,7 +3,7 @@
 putenv('HOME='.dirname(__DIR__)."/../");
 require __DIR__.'/../../vendor/autoload.php';
 
-require __DIR__.'/../../customerConfigSample.php';
+require __DIR__.'/../../customerConfig/234.php';
 
 
 $applicationName = "Insideall - Test 1";

@@ -2,8 +2,6 @@
 
 namespace App\AdManager;
 
-require __DIR__.'/../../vendor/autoload.php';
-
 use Google\AdsApi\AdManager\v201908\LineItemCreativeAssociation;
 use Google\AdsApi\AdManager\v201908\LineItemCreativeAssociationService;
 use Google\AdsApi\AdManager\v201908\Size;

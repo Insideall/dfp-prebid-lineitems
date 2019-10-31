@@ -36,8 +36,11 @@ class HeaderBiddingScript
 				'adidKeyName' => substr("hb_adid_$ssp", 0, 20),
 				'sizeKeyName' => substr("hb_size_$ssp", 0, 20),
 				'currency' => $params['currency'],
-				'ssp' => $ssp,
+				'ssp' => $ssp
 			];
+			if(isset($params['geoTargetingList'])){
+				$param['geoTargetingList'] = $params['geoTargetingList'];
+			}
 			$script = new SSPScript($param);
 
 			$script->createAdUnits();
