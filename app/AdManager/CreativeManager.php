@@ -2,11 +2,11 @@
 
 namespace App\AdManager;
 
-use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
-use Google\AdsApi\AdManager\v201908\CreativeService;
-use Google\AdsApi\AdManager\v201908\ThirdPartyCreative;
-use Google\AdsApi\AdManager\v201908\Size;
-use Google\AdsApi\AdManager\v201908\ApiException;
+use Google\AdsApi\AdManager\Util\v201911\StatementBuilder;
+use Google\AdsApi\AdManager\v201911\CreativeService;
+use Google\AdsApi\AdManager\v201911\ThirdPartyCreative;
+use Google\AdsApi\AdManager\v201911\Size;
+use Google\AdsApi\AdManager\v201911\ApiException;
 
 class CreativeManager extends Manager
 {

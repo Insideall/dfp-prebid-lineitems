@@ -5,7 +5,7 @@ namespace App\AdManager;
 use Google\AdsApi\AdManager\AdManagerSession;
 use Google\AdsApi\AdManager\AdManagerSessionBuilder;
 use Google\AdsApi\Common\OAuth2TokenBuilder;
-use Google\AdsApi\AdManager\v201908\ServiceFactory;
+use Google\AdsApi\AdManager\v201911\ServiceFactory;
 
 class Manager
 {

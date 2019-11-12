@@ -2,11 +2,11 @@
 
 namespace App\AdManager;
 
-use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
-use Google\AdsApi\AdManager\Util\v201908\Pql;
-use Google\AdsApi\AdManager\v201908\Targeting;
-use Google\AdsApi\AdManager\v201908\GeoTargeting;
-use Google\AdsApi\AdManager\v201908\Location;
+use Google\AdsApi\AdManager\Util\v201911\StatementBuilder;
+use Google\AdsApi\AdManager\Util\v201911\Pql;
+use Google\AdsApi\AdManager\v201911\Targeting;
+use Google\AdsApi\AdManager\v201911\GeoTargeting;
+use Google\AdsApi\AdManager\v201911\Location;
 
 class GeoTargetingManager extends Manager
 {

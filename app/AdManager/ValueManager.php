@@ -2,9 +2,9 @@
 
 namespace App\AdManager;
 
-use Google\AdsApi\AdManager\v201908\CustomTargetingValue;
-use Google\AdsApi\AdManager\v201908\CustomTargetingValueMatchType;
-use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
+use Google\AdsApi\AdManager\v201911\CustomTargetingValue;
+use Google\AdsApi\AdManager\v201911\CustomTargetingValueMatchType;
+use Google\AdsApi\AdManager\Util\v201911\StatementBuilder;
 
 class ValueManager extends Manager
 {
@@ -14,7 +14,6 @@ class ValueManager extends Manager
 	public function setKeyId($keyId)
 	{
 		$this->keyId = $keyId;
-
 		return $this;
 	}
 

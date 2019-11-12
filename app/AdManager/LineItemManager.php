@@ -2,26 +2,26 @@
 
 namespace App\AdManager;
 
-use Google\AdsApi\AdManager\v201908\AdUnitTargeting;
-use Google\AdsApi\AdManager\v201908\CostType;
-use Google\AdsApi\AdManager\v201908\CreativePlaceholder;
-use Google\AdsApi\AdManager\v201908\CreativeRotationType;
-use Google\AdsApi\AdManager\v201908\CustomCriteria;
-use Google\AdsApi\AdManager\v201908\CustomCriteriaComparisonOperator;
-use Google\AdsApi\AdManager\v201908\CustomCriteriaSet;
-use Google\AdsApi\AdManager\v201908\CustomCriteriaSetLogicalOperator;
-use Google\AdsApi\AdManager\v201908\Goal;
-use Google\AdsApi\AdManager\v201908\GoalType;
-use Google\AdsApi\AdManager\v201908\InventoryTargeting;
-use Google\AdsApi\AdManager\v201908\LineItem;
-use Google\AdsApi\AdManager\v201908\LineItemService;
-use Google\AdsApi\AdManager\v201908\LineItemType;
-use Google\AdsApi\AdManager\v201908\Money;
-use Google\AdsApi\AdManager\v201908\Size;
-use Google\AdsApi\AdManager\v201908\StartDateTimeType;
-use Google\AdsApi\AdManager\v201908\Targeting;
-use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
-use Google\AdsApi\AdManager\v201908\ApiException;
+use Google\AdsApi\AdManager\v201911\AdUnitTargeting;
+use Google\AdsApi\AdManager\v201911\CostType;
+use Google\AdsApi\AdManager\v201911\CreativePlaceholder;
+use Google\AdsApi\AdManager\v201911\CreativeRotationType;
+use Google\AdsApi\AdManager\v201911\CustomCriteria;
+use Google\AdsApi\AdManager\v201911\CustomCriteriaComparisonOperator;
+use Google\AdsApi\AdManager\v201911\CustomCriteriaSet;
+use Google\AdsApi\AdManager\v201911\CustomCriteriaSetLogicalOperator;
+use Google\AdsApi\AdManager\v201911\Goal;
+use Google\AdsApi\AdManager\v201911\GoalType;
+use Google\AdsApi\AdManager\v201911\InventoryTargeting;
+use Google\AdsApi\AdManager\v201911\LineItem;
+use Google\AdsApi\AdManager\v201911\LineItemService;
+use Google\AdsApi\AdManager\v201911\LineItemType;
+use Google\AdsApi\AdManager\v201911\Money;
+use Google\AdsApi\AdManager\v201911\Size;
+use Google\AdsApi\AdManager\v201911\StartDateTimeType;
+use Google\AdsApi\AdManager\v201911\Targeting;
+use Google\AdsApi\AdManager\Util\v201911\StatementBuilder;
+use Google\AdsApi\AdManager\v201911\ApiException;
 
 class LineItemManager extends Manager
 {
@@ -32,6 +32,7 @@ class LineItemManager extends Manager
 	protected $keyId;
 	protected $valueId;
 	protected $bucket;
+	protected $customCriterias;
 	protected $lineItem;
 	protected $lineItemName;
 	protected $geoTargeting;
@@ -76,6 +77,12 @@ class LineItemManager extends Manager
 	public function setBucket($bucket)
 	{
 		$this->bucket = $bucket;
+		return $this;
+	}
+
+	public function setCustomCriterias($customCriterias)
+	{
+		$this->customCriterias = $customCriterias;
 		return $this;
 	}
 
@@ -261,14 +268,16 @@ class LineItemManager extends Manager
 		$customCriteria->setOperator(CustomCriteriaComparisonOperator::IS);
 		$customCriteria->setValueIds([$this->valueId]);
 
+		array_push($this->customCriterias,$customCriteria);
+
 		$topCustomCriteriaSet = new CustomCriteriaSet();
 		$topCustomCriteriaSet->setLogicalOperator(
-			CustomCriteriaSetLogicalOperator::OR_VALUE
+			CustomCriteriaSetLogicalOperator::AND_VALUE
 		);
-		$topCustomCriteriaSet->setChildren(
-			[$customCriteria]
-		);
+		$topCustomCriteriaSet->setChildren($this->customCriterias);
 		$targeting->setCustomTargeting($topCustomCriteriaSet);
+
+
 
 		$lineItem->setTargeting($targeting);
 

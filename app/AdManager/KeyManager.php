@@ -2,9 +2,9 @@
 
 namespace App\AdManager;
 
-use Google\AdsApi\AdManager\v201908\CustomTargetingKey;
-use Google\AdsApi\AdManager\v201908\CustomTargetingKeyType;
-use Google\AdsApi\AdManager\Util\v201908\StatementBuilder;
+use Google\AdsApi\AdManager\v201911\CustomTargetingKey;
+use Google\AdsApi\AdManager\v201911\CustomTargetingKeyType;
+use Google\AdsApi\AdManager\Util\v201911\StatementBuilder;
 
 class KeyManager extends Manager
 {

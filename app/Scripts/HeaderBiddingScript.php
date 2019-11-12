@@ -41,6 +41,9 @@ class HeaderBiddingScript
 			if(isset($params['geoTargetingList'])){
 				$param['geoTargetingList'] = $params['geoTargetingList'];
 			}
+			if(isset($params['customTargeting'])){
+				$param['customTargeting'] = $params['customTargeting'];
+			}
 			$script = new SSPScript($param);
 
 			$script->createAdUnits();

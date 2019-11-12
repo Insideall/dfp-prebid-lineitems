@@ -2,6 +2,9 @@
 
 namespace App\Scripts;
 
+use Google\AdsApi\AdManager\v201911\CustomCriteria;
+use Google\AdsApi\AdManager\v201911\CustomCriteriaComparisonOperator;
+
 class SSPScript extends \App\AdManager\Manager
 {
 	protected $orderName;
@@ -27,6 +30,8 @@ class SSPScript extends \App\AdManager\Manager
 	protected $creativesList;
 	protected $rootAdUnitId;
 	protected $geoTargeting;
+	protected $customTargeting = [];
+	protected $customCriterias = [];
 
 	public function __construct($params)
 	{
@@ -40,6 +45,23 @@ class SSPScript extends \App\AdManager\Manager
 		
 		if($this->geoTargetingList !== null){
 			$this->geoTargeting = (new \App\AdManager\GeoTargetingManager)->setGeoTargeting($this->geoTargetingList);
+		}
+		if(!empty($this->customTargeting)){
+			foreach ($this->customTargeting as $key => $values) {
+				$keyId = (new \App\AdManager\KeyManager())->setUpCustomTargetingKey($key);
+				$values = explode(",",str_replace(" ", "", $values));
+				$values = (new \App\AdManager\ValueManager)->setKeyId($keyId)
+					->convertValuesListToDFPValuesList($values);
+				$valueIds = [];
+				foreach ($values as $value) {
+					array_push($valueIds, $value['valueId']);
+				}
+				$customCriteria = new CustomCriteria();
+				$customCriteria->setKeyId($keyId);
+				$customCriteria->setOperator(CustomCriteriaComparisonOperator::IS);
+				$customCriteria->setValueIds($valueIds);
+				array_push($this->customCriterias, $customCriteria);
+			}
 		}
 
 		$this->valuesList = Buckets::createBuckets($this->priceGranularity);
@@ -96,6 +118,7 @@ class SSPScript extends \App\AdManager\Manager
 				->setKeyId($this->priceKeyId)
 				->setValueId($dfpValue['valueId'])
 				->setBucket($dfpValue['valueName'])
+				->setCustomCriterias($this->customCriterias)
 				->setRootAdUnitId($this->rootAdUnitId)
 				->setLineItemName();
 			if($this->geoTargeting !== null){
